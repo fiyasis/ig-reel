@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.work/
+*.mp4
+*.mp3
+reel_caption.txt
