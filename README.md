@@ -41,7 +41,8 @@ Output: `reel.mp4` (1080x1920, H.264 + AAC — Instagram-compatible) and
 
 Prereqs: Instagram account switched to **Professional (Business or Creator)**,
 a linked Facebook Page, and a Meta developer app with permissions
-`instagram_content_publish`, `pages_show_list`, `pages_manage_metadata`.
+`instagram_content_publish`, `pages_show_list`, `pages_manage_metadata`,
+and (for FB publishing) `pages_manage_posts`.
 Use a **long-lived user token** (not the page token). Get the token from Meta
 Graph Explorer (user token, ~60 days — refreshable) or your app's OAuth flow.
 
@@ -50,11 +51,24 @@ Graph Explorer (user token, ~60 days — refreshable) or your app's OAuth flow.
 .venv/bin/python ig_publish.py --page-id 1234567890 --token USTOKEN \
   --video reel.mp4 --caption "see caption.txt"
 
+# publish to Instagram AND the linked Facebook Page at the same time
+.venv/bin/python ig_publish.py --page-id 1234567890 --token USTOKEN \
+  --video reel.mp4 --caption "..." --post-to-fb
+
+# Facebook Page only (skip Instagram)
+.venv/bin/python ig_publish.py --page-id 1234567890 --token USTOKEN \
+  --video reel.mp4 --caption "..." --fb-only
+
 # if the container takes longer than the request window, retry with its id
 .venv/bin/python ig_publish.py --page-id 1234567890 --token USTOKEN --container <id>
 ```
 
-The tool prints the live reel URL on success.
+The tool prints the live reel URL (and the FB video URL) on success.
+
+**Facebook publishing** uses the same token — the page token is derived via
+`GET /{page_id}?fields=access_token`. For FB videos the app also needs the
+`pages_manage_posts` permission (add it in Graph Explorer when generating the
+token). The same 1080x1920 MP4 works on both — Facebook crops it for the feed.
 
 ## Why not the unofficial route?
 
